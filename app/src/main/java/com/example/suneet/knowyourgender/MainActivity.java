@@ -47,11 +47,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        result.setOnClickListener(new View.OnClickListener() {
+        search.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Log.e("TAG", "onClick: " );
+
                 if(name.getText().toString()=="")
                 {
                     Toast.makeText(MainActivity.this,"Enter some text",Toast.LENGTH_SHORT).show();
@@ -61,10 +61,6 @@ public class MainActivity extends AppCompatActivity {
                     String n=name.getText().toString();
                     myAsyncTask = new MyAsyncTask();
                      myAsyncTask.execute(BASE_URL+n);
-                    spannableString=new SpannableString("Name "+name+"\n"+"Gender "+gender+"\n"+"Probability "+probability+"\n"
-                    +"Count "+count);
-                    spannableString.setSpan(new StyleSpan(Typeface.BOLD),0,spannableString.length()-1,0);
-                    result.setText(spannableString);
 
                 }
             }
@@ -90,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             OkHttpClient client=new OkHttpClient();
             final Request request=new Request.Builder().url(params[0]).build();
+            Log.e("TAG", "doInBackground: "+params[0] );
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -100,8 +97,9 @@ public class MainActivity extends AppCompatActivity {
                 public void onResponse(Call call, Response response) throws IOException {
                     String result=response.body().string();
                     try {
-                        JSONObject jsonObject=new JSONObject(call.toString());
+                        JSONObject jsonObject=new JSONObject(result);
                         textName=jsonObject.getString("name");
+
                         gender=jsonObject.getString("gender");
                         probability=jsonObject.getString("probability");
                         count=jsonObject.getString("count");
@@ -109,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                     } catch (JSONException e) {
-                        Toast.makeText(MainActivity.this,"Not Fetches Result",Toast.LENGTH_SHORT).show();
+
                         e.printStackTrace();
 
                     }
@@ -122,6 +120,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            spannableString=new SpannableString("Name "+textName+"\n"+"Gender "+gender+"\n"+"Probability "+probability+"\n"
+                    +"Count "+count);
+            spannableString.setSpan(new StyleSpan(Typeface.BOLD),0,spannableString.length(),0);
+            result.setText(spannableString);
+            result.setText(spannableString);
             progressDialog.hide();
 
         }
