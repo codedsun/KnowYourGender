@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
             spannableString=new SpannableString("Name "+textName+"\n"+"Gender "+gender+"\n"+"Probability "+probability+"\n"
                     +"Count "+count);
             spannableString.setSpan(new StyleSpan(Typeface.BOLD),0,spannableString.length(),0);
